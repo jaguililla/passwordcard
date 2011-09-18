@@ -6,29 +6,48 @@ import static java.awt.event.MouseEvent.*;
 import static java.lang.System.*;
 import static javax.swing.UIManager.*;
 
+import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileDescriptor;
-import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-
-import org.pepsoft.passwordcard.PasswordCard;
+import java.util.Properties;
 
 public class CardTray extends TrayIcon {
-    private static CardTray mInstance;
-    static URL iconUrl = Class.class.getResource ("/passwordcard32.png");
+    static final URL iconUrl = Class.class.getResource ("/passwordcard32.png");
+    private static final String DEFAULT_PROPERTIES = "/passwordcard.properties";
+    private static final String USAGE =
+        "Syntax exception. Usage: java -jar PasswordCard.jar <config file>";
 
-    private static void start (PasswordCard aCard) {
+    private static CardTray mInstance;
+
+    public static void main (String[] args) {
+        if (args.length > 1) {
+            err.println (USAGE);
+            exit (-1);
+        }
+        if (!SystemTray.isSupported ()) {
+            err.println ("Tray icon not supported!");
+            exit (-2);
+        }
+
         try {
+            Properties config = new Properties ();
+            try {
+                config.load (new FileReader (args.length == 1? args[0] : DEFAULT_PROPERTIES));
+            }
+            catch (IOException e) {
+                config.load (new InputStreamReader (Class.class.getResourceAsStream (
+                    args.length == 1? args[0] : DEFAULT_PROPERTIES)));
+            }
+
             setLookAndFeel (getSystemLookAndFeelClassName ());
 
-            if (aCard == null)
-                throw new IllegalArgumentException ();
-
-            getSystemTray ().add (mInstance == null? mInstance = new CardTray (aCard) : mInstance);
+            getSystemTray ().add (
+                mInstance == null? mInstance = new CardTray (config) : mInstance);
         }
         catch (Exception e) {
             err.println ("TrayIcon could not be added.");
@@ -36,34 +55,12 @@ public class CardTray extends TrayIcon {
         }
     }
 
-    public static void main (String[] args) throws IOException {
-        setOut (new PrintStream (new FileOutputStream (FileDescriptor.out), true, "UTF-8"));
+    final CardFrame mFrame;
 
-        long seed = Tool.parseUnsignedHexLong (args[0]);
-        boolean digitArea = false;
-        boolean includeSymbols = false;
-
-        for (int i = 1; i < args.length; i++)
-            if (args[i].equals ("--digitArea"))
-                digitArea = true;
-            else if (args[i].equals ("--includeSymbols"))
-                includeSymbols = true;
-            else
-                throw new IllegalArgumentException (args[i]);
-
-        PasswordCard passwordCard = new PasswordCard (seed, digitArea, includeSymbols);
-        if (isSupported ())
-            CardTray.start (passwordCard);
-        else
-            err.println ("Tray icon not supported!");
-    }
-
-    final PasswordCard mCard;
-
-    private CardTray (PasswordCard aCard) {
+    private CardTray (Properties aConfiguration) {
         super (getDefaultToolkit ().getImage (iconUrl));
 
-        mCard = aCard;
+        mFrame = new CardFrame (aConfiguration);
 
         // TODO resize image manually to avoid visual artifacts
         setImageAutoSize (true);
@@ -73,7 +70,7 @@ public class CardTray extends TrayIcon {
             public void mouseClicked (MouseEvent aE) {
                 int btn = aE.getButton ();
                 if (btn == BUTTON1)
-                    CardFrame.toggle (mCard);
+                    mFrame.toggle ();
                 else if (btn == BUTTON2)
                     exit (0);
             }

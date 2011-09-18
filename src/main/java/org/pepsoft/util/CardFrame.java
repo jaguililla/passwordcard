@@ -1,19 +1,22 @@
 package org.pepsoft.util;
 
-import static java.awt.GraphicsDevice.WindowTranslucency.*;
+import static java.awt.Color.*;
+import static java.lang.Boolean.*;
+import static java.lang.Integer.*;
+import static org.pepsoft.util.Tool.*;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsDevice;
-import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.Properties;
 
 import javax.swing.JDialog;
 
@@ -25,53 +28,45 @@ import org.pepsoft.passwordcard.PasswordCard;
  */
 public class CardFrame extends JDialog {
     private static final long serialVersionUID = -9057030187624431810L;
-    private static Toolkit sTk = Toolkit.getDefaultToolkit ();
-
-    private static CardFrame mInstance;
-
-    public static void toggle (PasswordCard aCard) {
-        if (mInstance == null)
-            mInstance = new CardFrame (aCard);
-
-        // setVisible (!isVisible ()) don't work properly
-        if (mInstance.isVisible ())
-            mInstance.dispose ();
-        else {
-            mInstance.setVisible (true);
-            Dimension size = sTk.getScreenSize ();
-            Insets sSize = sTk.getScreenInsets (mInstance.getGraphicsConfiguration ());
-            mInstance.setLocation (
-                sSize.left, size.height - sSize.bottom - mInstance.getHeight ());
-        }
-    }
+    private static final Toolkit sTk = Toolkit.getDefaultToolkit ();
+    private static final Dimension sSize = sTk.getScreenSize ();
+//    private static final Insets sInsets = sTk.getScreenInsets (getGraphicsConfiguration ());
+    private static final Color [] COLORS = { WHITE, GRAY, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN };
 
     private final PasswordCard mCard;
 
-    private CardFrame (PasswordCard aCard) {
-        if (aCard == null)
+    CardFrame (Properties aConfiguration) {
+        if (aConfiguration == null)
             throw new IllegalArgumentException ();
 
-        mCard = aCard;
+        mCard = new PasswordCard (
+            parseUnsignedHexLong (aConfiguration.getProperty ("seed")),
+            parseBoolean (aConfiguration.getProperty ("digits")),
+            parseBoolean (aConfiguration.getProperty ("symbols")));
 
-        setUndecorated (true);
-        setFont (new Font ("DejaVu Sans Mono", Font.PLAIN, 20));
-        setIconImage (sTk.getImage ((CardTray.iconUrl)));
-        setTitle ("Password Card");
-        Dimension sSize = sTk.getScreenSize ();
+        String fstyle = aConfiguration.getProperty ("font.style").trim ();
+        int style = Font.PLAIN;
+        if (fstyle.equals ("BOLD"))
+            style = Font.BOLD;
+        if (fstyle.equals ("ITALIC"))
+            style = Font.ITALIC;
+
+        setFont (new Font (
+            aConfiguration.getProperty ("font.face"),
+            style,
+            parseInt (aConfiguration.getProperty ("font.size"))));
+
         setSize (500, 200);
         setLocation (
             (sSize.width - getWidth ()) / 2,
             (sSize.height - getHeight ()) / 2);
+
+        setUndecorated (true);
+        setIconImage (sTk.getImage ((CardTray.iconUrl)));
+        setTitle ("Password Card");
         setShape (new RoundRectangle2D.Float (0, 0, 500, 200, 20, 20));
-        GraphicsDevice device = getGraphicsConfiguration ().getDevice ();
 
-        System.out.println (
-            "> TRANSLUCENT: " + device.isWindowTranslucencySupported (TRANSLUCENT) +
-            "> PIXEL TRANSLUCENT: " + device.isWindowTranslucencySupported (PERPIXEL_TRANSLUCENT) +
-            "> PIXEL TRANSPARENT: " + device.isWindowTranslucencySupported (PERPIXEL_TRANSPARENT));
-
-        boolean ontop = true;
-        if (ontop)
+        if (parseBoolean (aConfiguration.getProperty ("ontop")))
             setAlwaysOnTop (true);
         else
             addWindowListener (new WindowAdapter () {
@@ -90,9 +85,19 @@ public class CardFrame extends JDialog {
         FontMetrics fm = aG.getFontMetrics ();
 
         int ii = 0;
-        for (char[] row: mCard.getGrid())
+        for (char[] row: mCard.getGrid()) {
+            g.setBackground (COLORS[ii % COLORS.length]);
             g.drawChars (row, 0, row.length, 10, ((fm.getMaxAscent () + 1) * ii++) + 20);
+        }
 
         g.dispose ();
+    }
+
+    public void toggle () {
+        // setVisible (!isVisible ()) don't work properly
+        if (isVisible ())
+            dispose ();
+        else
+            setVisible (true);
     }
 }

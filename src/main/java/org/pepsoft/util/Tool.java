@@ -34,6 +34,10 @@ import org.pepsoft.passwordcard.PasswordCard;
  * @author pepsoft.org
  */
 public class Tool {
+    private static final String USAGE =
+        "Syntax exception. Usage: " +
+        "java -jar PasswordCard.jar <card number> [ --digitArea ] [ -- includeSymbols ]";
+
     static long parseUnsignedHexLong (String str) {
         str = str.trim ();
         if (str.length () > 16)
@@ -51,22 +55,26 @@ public class Tool {
     }
 
     public static void main (String[] args) throws IOException {
+        if (args.length == 0) {
+            out.println (USAGE);
+            exit (-1);
+        }
+
         setOut (new PrintStream (new FileOutputStream (FileDescriptor.out), true, "UTF-8"));
 
-        long seed = parseUnsignedHexLong (args[0]);
-        boolean digitArea = false;
-        boolean includeSymbols = false;
+        boolean digits = false;
+        boolean symbols = false;
 
         for (int i = 1; i < args.length; i++)
             if (args[i].equals ("--digitArea"))
-                digitArea = true;
+                digits = true;
             else if (args[i].equals ("--includeSymbols"))
-                includeSymbols = true;
+                symbols = true;
             else
                 throw new IllegalArgumentException (args[i]);
 
-        PasswordCard passwordCard = new PasswordCard (seed, digitArea, includeSymbols);
-        for (char[] row : passwordCard.getGrid ())
+        PasswordCard card = new PasswordCard (parseUnsignedHexLong (args[0]), digits, symbols);
+        for (char[] row : card.getGrid ())
             out.println (row);
     }
 }

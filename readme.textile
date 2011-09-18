@@ -4,17 +4,6 @@ Passwordcard
 
 h1. Usage
 
-h1. Status
-
-h1. Plans
-
-h1. Notice
-
-This project also contains code and/or resources of:
-
-* Mark James: the Silk icon set: "www.famfamfam.com/lab/icons/silk/":http://www.famfamfam.com/lab/icons/silk/.
-* The Apache Software Foundation: a modified Maven banner image.
-
 h1. License
 
 See COPYING
