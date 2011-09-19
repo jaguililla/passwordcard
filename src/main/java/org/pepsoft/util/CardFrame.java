@@ -3,6 +3,7 @@ package org.pepsoft.util;
 import static java.awt.Color.*;
 import static java.lang.Boolean.*;
 import static java.lang.Integer.*;
+import static java.lang.System.*;
 import static org.pepsoft.util.Tool.*;
 
 import java.awt.Color;
@@ -13,6 +14,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.RoundRectangle2D;
@@ -27,6 +30,13 @@ import org.pepsoft.passwordcard.PasswordCard;
  * @author jam
  */
 public class CardFrame extends JDialog {
+    private enum Position {
+        TOP_LEFT,      TOP,      TOP_RIGTH,
+        LEFT,          CENTER,   RIGHT,
+        BOTTOM_LEFT,   BOTTOM,   BOTTOM_RIGHT,
+        CLICK
+    }
+
     private static final long serialVersionUID = -9057030187624431810L;
     private static final Toolkit sTk = Toolkit.getDefaultToolkit ();
     private static final Dimension sSize = sTk.getScreenSize ();
@@ -46,25 +56,28 @@ public class CardFrame extends JDialog {
 
         String fstyle = aConfiguration.getProperty ("font.style").trim ();
         int style = Font.PLAIN;
-        if (fstyle.equals ("BOLD"))
-            style = Font.BOLD;
-        if (fstyle.equals ("ITALIC"))
-            style = Font.ITALIC;
+        if (fstyle.contains ("BOLD"))
+            style &= Font.BOLD;
+        if (fstyle.contains ("ITALIC"))
+            style &= Font.ITALIC;
 
         setFont (new Font (
             aConfiguration.getProperty ("font.face"),
             style,
             parseInt (aConfiguration.getProperty ("font.size"))));
 
+        // TODO Width & Height
         setSize (500, 200);
-        setLocation (
-            (sSize.width - getWidth ()) / 2,
-            (sSize.height - getHeight ()) / 2);
+
+        setCardLocation (Position.valueOf (aConfiguration.getProperty ("location").toUpperCase ()));
 
         setUndecorated (true);
         setIconImage (sTk.getImage ((CardTray.iconUrl)));
         setTitle ("Password Card");
-        setShape (new RoundRectangle2D.Float (0, 0, 500, 200, 20, 20));
+
+        if (getProperty ("java.specification.version").equals ("1.7")
+            && parseBoolean (aConfiguration.getProperty ("rounded")))
+            setShape (new RoundRectangle2D.Float (0, 0, 500, 200, 20, 20));
 
         if (parseBoolean (aConfiguration.getProperty ("ontop")))
             setAlwaysOnTop (true);
@@ -75,6 +88,24 @@ public class CardFrame extends JDialog {
                     dispose ();
                 }
             });
+
+        if (parseBoolean (aConfiguration.getProperty ("click.close")))
+            addMouseListener (new MouseAdapter() {
+                @Override
+                public void mouseClicked (MouseEvent aE) {
+                    dispose ();
+                }
+            });
+    }
+
+    private void setCardLocation (Position aPosition) {
+        int w = (sSize.width - getWidth ()) / 2, h = (sSize.height - getHeight ()) / 2;
+
+        switch (aPosition) {
+            case TOP:
+        }
+
+        setLocation (w, h);
     }
 
     @Override

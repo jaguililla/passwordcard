@@ -35,6 +35,7 @@ public class CardTray extends TrayIcon {
         }
 
         try {
+            // TODO Check property existence properly
             Properties config = new Properties ();
             try {
                 config.load (new FileReader (args.length == 1? args[0] : DEFAULT_PROPERTIES));

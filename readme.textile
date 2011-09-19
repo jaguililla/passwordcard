@@ -1,10 +1,26 @@
 h1. About
 
-Passwordcard
+This is a GUI tool for security password cards. The application adds a tray icon which allow you to display a password card in the screen.
+
+The original Web site, Android application and algorithm implementation (source code and binary) can be found at: "www.passwordcard.org":http://www.passwordcard.org.
 
 h1. Usage
 
+The project uses Maven for building. And a configuration file/resource. These are the most useful commands to start working with it:
+
+* Packaging: mvn -P optimize
+* Run: java -jar passwordcard.jar <properties_path>
+* Exit: press the middle mouse button over the tray icon.
+* Configuration: see the passwordcard.properties file as a reference to create your own configuration.
+
+For more information you can refer to the original README file.
+
+h1. Prerequisites
+
+To compile the project you will need JDK 7. Also to build the project you will need Maven 3, you can also use Maven 2 modifying the POM (that's up to you).
+
+Though I have not tested it, maybe you can run the binary using JRE 6, however this way won't allow the use of rounded window corners.
+
 h1. License
 
-See COPYING
-
+See COPYING.

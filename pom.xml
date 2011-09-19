@@ -3,17 +3,21 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>passwordcard</groupId>
 	<artifactId>passwordcard</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	
+
+	<prerequisites>
+		<maven>3</maven>
+	</prerequisites>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 	</properties>
-	
+
 	<profiles>
 		<profile>
 			<id>optimize</id>
@@ -23,4 +27,23 @@
 			</properties>
 		</profile>
 	</profiles>
+
+	<build>
+		<defaultGoal>clean package</defaultGoal>
+		<finalName>${project.artifactId}</finalName>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>org.pepsoft.util.CardTray</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
