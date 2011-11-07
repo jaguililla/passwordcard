@@ -14,8 +14,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 
 	<profiles>
@@ -27,6 +27,16 @@
 			</properties>
 		</profile>
 	</profiles>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>swt</artifactId>
+			<version>3.7.1</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/swt-gtk-64.jar</systemPath>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<defaultGoal>clean package</defaultGoal>

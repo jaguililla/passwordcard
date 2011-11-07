@@ -17,9 +17,7 @@ For more information you can refer to the original README file.
 
 h1. Prerequisites
 
-To compile the project you will need JDK 7. Also to build the project you will need Maven 3, you can also use Maven 2 modifying the POM (that's up to you).
-
-Though I have not tested it, maybe you can run the binary using JRE 6, however this way won't allow the use of rounded window corners.
+To compile and run the project you will need JDK 7. Also to build the project you will need Maven 3, you can also use Maven 2 modifying the POM (that's up to you).
 
 h1. License
 
