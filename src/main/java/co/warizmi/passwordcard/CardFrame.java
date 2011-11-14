@@ -1,15 +1,11 @@
-package org.pepsoft.util;
+package co.warizmi.passwordcard;
 
-import static java.awt.Color.*;
-import static java.lang.Boolean.*;
-import static java.lang.Integer.*;
-import static java.lang.System.*;
-import static org.pepsoft.util.Tool.*;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+import static java.lang.System.getProperty;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -23,7 +19,6 @@ import java.util.Properties;
 
 import javax.swing.JDialog;
 
-import org.pepsoft.passwordcard.PasswordCard;
 
 /**
  * TODO Shadow, shape, tray icon location, hide taskbar button.
@@ -41,7 +36,7 @@ public class CardFrame extends JDialog {
     private static final Toolkit sTk = Toolkit.getDefaultToolkit ();
     private static final Dimension sSize = sTk.getScreenSize ();
 //    private static final Insets sInsets = sTk.getScreenInsets (getGraphicsConfiguration ());
-    private static final Color [] COLORS = { WHITE, GRAY, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN };
+//    private static final Color [] COLORS = { WHITE, GRAY, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN };
 
     private final PasswordCard mCard;
 
@@ -50,7 +45,7 @@ public class CardFrame extends JDialog {
             throw new IllegalArgumentException ();
 
         mCard = new PasswordCard (
-            parseUnsignedHexLong (aConfiguration.getProperty ("seed")),
+            aConfiguration.getProperty ("seed"),
             parseBoolean (aConfiguration.getProperty ("digits")),
             parseBoolean (aConfiguration.getProperty ("symbols")));
 
@@ -113,13 +108,13 @@ public class CardFrame extends JDialog {
         Graphics2D g = (Graphics2D)aG;
         g.setRenderingHint (
             RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
-        FontMetrics fm = aG.getFontMetrics ();
+//        FontMetrics fm = aG.getFontMetrics ();
 
-        int ii = 0;
-        for (char[] row: mCard.getGrid()) {
-            g.setBackground (COLORS[ii % COLORS.length]);
-            g.drawChars (row, 0, row.length, 10, ((fm.getMaxAscent () + 1) * ii++) + 20);
-        }
+//        int ii = 0;
+//        for (char[] row: mCard.getGrid()) {
+//            g.setBackground (COLORS[ii % COLORS.length]);
+//            g.drawChars (row, 0, row.length, 10, ((fm.getMaxAscent () + 1) * ii++) + 20);
+//        }
 
         g.dispose ();
     }

@@ -1,7 +1,7 @@
-package org.pepsoft.util;
+package co.warizmi.passwordcard;
 
-import static java.awt.SystemTray.*;
-import static java.awt.Toolkit.*;
+import static java.awt.SystemTray.getSystemTray;
+import static java.awt.Toolkit.getDefaultToolkit;
 import static java.awt.event.MouseEvent.*;
 import static java.lang.System.*;
 import static javax.swing.UIManager.*;
@@ -17,7 +17,7 @@ import java.net.URL;
 import java.util.Properties;
 
 public class CardTray extends TrayIcon {
-    static final URL iconUrl = Class.class.getResource ("/passwordcard32.png");
+    static final URL iconUrl = Class.class.getResource ("/passwordcard.png");
     private static final String DEFAULT_PROPERTIES = "/passwordcard.properties";
     private static final String USAGE =
         "Syntax exception. Usage: java -jar PasswordCard.jar <config file>";

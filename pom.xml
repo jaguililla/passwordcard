@@ -16,6 +16,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+		
+		<ws>gtk</ws>
+		<arch>64</arch>
 	</properties>
 
 	<profiles>
@@ -26,6 +29,19 @@
 				<maven.compiler.debug>false</maven.compiler.debug>
 			</properties>
 		</profile>
+
+		<profile>
+			<id>linux</id>
+			<activation>
+				<property>
+					<name>linux</name>
+				</property>
+			</activation>
+			<properties>
+				<ws>gtk</ws>
+				<arch>64</arch>
+			</properties>
+		</profile>
 	</profiles>
 
 	<dependencies>
@@ -34,7 +50,7 @@
 			<artifactId>swt</artifactId>
 			<version>3.7.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/swt-gtk-64.jar</systemPath>
+			<systemPath>${basedir}/lib/swt-${ws}-${arch}.jar</systemPath>
 		</dependency>
 	</dependencies>
 
@@ -49,7 +65,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.pepsoft.util.CardTray</mainClass>
+							<mainClass>co.warizmi.passwordcard.CardTray</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
