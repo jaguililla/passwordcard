@@ -31,15 +31,37 @@
 		</profile>
 
 		<profile>
+			<id>32</id>
+			<properties>
+				<arch>32</arch>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>64</id>
+			<properties>
+				<arch>64</arch>
+			</properties>
+		</profile>
+
+		<profile>
 			<id>linux</id>
-			<activation>
-				<property>
-					<name>linux</name>
-				</property>
-			</activation>
 			<properties>
 				<ws>gtk</ws>
-				<arch>64</arch>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>windows</id>
+			<properties>
+				<ws>win32</ws>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>macosx</id>
+			<properties>
+				<ws>cocoa</ws>
 			</properties>
 		</profile>
 	</profiles>
@@ -65,7 +87,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>co.warizmi.passwordcard.CardTray</mainClass>
+							<mainClass>co.warizmi.passwordcard.App</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

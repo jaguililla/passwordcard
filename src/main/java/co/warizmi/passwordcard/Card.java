@@ -1,10 +1,12 @@
 package co.warizmi.passwordcard;
 
-import static java.awt.Color.*;
+import static java.awt.Font.PLAIN;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
+import static java.lang.System.*;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,17 +14,29 @@ import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
 
-public class PasswordCard {
+public class Card {
     private static final int WIDTH = 29, HEIGHT = 9;
     private static final int BODY_HEIGHT = HEIGHT - 1, HALF_HEIGHT = 1 + (BODY_HEIGHT / 2);
 
-    private static final String HEADER_CHARS = "■□▲△○●★☂☀☁☹☺♠♣♥♦♫€¥£$!?¡¿⊙◐◩�";
     private static final String LOWERCASE_LETTERS = "abcdefghjkmnpqrstuvwxyz";
     private static final String UPPERCASE_LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-    private static final String DIGITS_LETTERS = "23456789" + LOWERCASE_LETTERS + UPPERCASE_LETTERS;
-    private static final String DIGITS_LETTERS_SYMBOLS = DIGITS_LETTERS + "@#$%&*<>?€+{}[]()/\\";
 
-    private static final Color [] COLORS = { WHITE, GRAY, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN };
+    public static final String HEADER_CHARS = "■□▲△○●★☂☀☁☹☺♠♣♥♦♫€¥£$!?¡¿⊙◐◩�";
+    public static final String DIGITS_LETTERS = "23456789" + LOWERCASE_LETTERS + UPPERCASE_LETTERS;
+    public static final String DIGITS_LETTERS_SYMBOLS = DIGITS_LETTERS + "@#$%&*<>?€+{}[]()/\\";
+
+    public static final Color [] COLORS = {
+        new Color (0xFFFFFF), // White
+        new Color (0xC0C0C0), // Gray
+        new Color (0xFFC0C0), // Red
+        new Color (0xC0FFC0), // Green
+        new Color (0xFFFFC0), // Yellow
+        new Color (0xC0C0FF), // Blue
+        new Color (0xFFC0FF), // Magenta
+        new Color (0xC0FFFF)  // Cyan
+    };
+
+    public static final Font FONT = new Font ("FreeMono", PLAIN, 10);
 
     private static long parseUnsignedHex (String aHex) {
         if (aHex == null || (aHex = aHex.trim ()).length () < 1 || aHex.length () > 16)
@@ -38,7 +52,17 @@ public class PasswordCard {
     private final boolean mDigitArea, mIncludeSymbols;
     private char[] mGrid;
 
-    public PasswordCard (String aConfigProperties) throws IOException {
+    public Card (boolean aDigitArea, boolean aIncludeSymbols) {
+        this (new SecureRandom ().nextLong (), aDigitArea, aIncludeSymbols);
+    }
+
+    public Card (long aNumber, boolean aDigitArea, boolean aIncludeSymbols) {
+        mNumber = aNumber;
+        mDigitArea = aDigitArea;
+        mIncludeSymbols = aIncludeSymbols;
+    }
+
+    public Card (String aConfigProperties) throws IOException {
         Properties config = new Properties ();
         try {
             // TODO Check property existence properly
@@ -53,17 +77,7 @@ public class PasswordCard {
         mIncludeSymbols = parseBoolean (config.getProperty ("symbols"));
     }
 
-    public PasswordCard (boolean aDigitArea, boolean aIncludeSymbols) {
-        this (new SecureRandom ().nextLong (), aDigitArea, aIncludeSymbols);
-    }
-
-    public PasswordCard (long aNumber, boolean aDigitArea, boolean aIncludeSymbols) {
-        mNumber = aNumber;
-        mDigitArea = aDigitArea;
-        mIncludeSymbols = aIncludeSymbols;
-    }
-
-    public PasswordCard (String aHexNumber, boolean aDigitArea, boolean aIncludeSymbols) {
+    public Card (String aHexNumber, boolean aDigitArea, boolean aIncludeSymbols) {
         this (parseUnsignedHex (aHexNumber), aDigitArea, aIncludeSymbols);
     }
 
@@ -71,7 +85,7 @@ public class PasswordCard {
         Random rnd = new Random (mNumber);
         mGrid = new char[HEIGHT * WIDTH];
 
-        System.arraycopy (shuffle (HEADER_CHARS.toCharArray (), rnd), 0, mGrid, 0, WIDTH);
+        arraycopy (shuffle (HEADER_CHARS.toCharArray (), rnd), 0, mGrid, 0, WIDTH);
 
         // TODO Change '% WIDTH' by '- 1' or somothing like that
         for (int ii = WIDTH; ii < (mDigitArea? HALF_HEIGHT : HEIGHT) * WIDTH; ii++)
@@ -114,13 +128,35 @@ public class PasswordCard {
         return mNumber;
     }
 
+    public String toHtml () {
+        return toHtml (true);
+    }
+
+    public String toHtml (boolean aShowLineNumber) {
+        String eol = lineSeparator ();
+        int lineLength = WIDTH + eol.length ();
+        lineLength += (aShowLineNumber? 1 : 0);
+        StringBuilder buffer = new StringBuilder (HEIGHT * lineLength);
+        char[] grid = getGrid ();
+
+        for (int ii = 0; ii < grid.length; ii += WIDTH) {
+            if (aShowLineNumber) {
+                buffer.append (ii > 0? Character.forDigit (ii, 10) : ' ');
+            }
+            buffer.append (grid, ii, WIDTH);
+            buffer.append (eol);
+        }
+
+        return buffer.toString ();
+    }
+
     @Override
     public String toString () {
         return toString (false, false);
     }
 
     public String toString (boolean aShowLineNumber, boolean aPadLineNumber) {
-        String eol = System.lineSeparator ();
+        String eol = lineSeparator ();
         int lineLength = WIDTH + eol.length ();
         lineLength += (aShowLineNumber? 1 : 0) + (aPadLineNumber? 1 : 0);
         StringBuilder buffer = new StringBuilder (HEIGHT * lineLength);
@@ -137,10 +173,5 @@ public class PasswordCard {
         }
 
         return buffer.toString ();
-    }
-
-    public String toHtml () {
-        // TODO Auto-generated method stub
-        return null;
     }
 }

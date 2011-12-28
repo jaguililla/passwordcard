@@ -13,95 +13,13 @@ The project uses Maven for building. And a configuration file/resource. These ar
 * Exit: press the middle mouse button over the tray icon.
 * Configuration: see the passwordcard.properties file as a reference to create your own configuration.
 
-For more information you can refer to the original README file.
+The source code and the program's output are encoded in UTF-8.
 
 h1. Prerequisites
 
-To compile and run the project you will need JDK 7. Also to build the project you will need Maven 3, you can also use Maven 2 modifying the POM (that's up to you).
+To compile and run the project you will need JDK 6. Also to build the project you will need Maven 3, you can also use Maven 2 modifying the POM (that's up to you).
 
-h1. Notice
-
-This project also contains code and/or resources of:
-
-* ...
-
-h1. License
-
-Copyright © 2011 Juan José Aguililla. All rights reserved.
-
-This program comes WITHOUT ANY WARRANTY; It is free software, and you can redistribute
-it and/or modify it under the terms of the GNU General Public License, Version 3.0.
-You may obtain a copy of the License at: "www.gnu.org/licenses/gpl.html":http://www.gnu.org/licenses/gpl.html.
-
-
----
-
-
-RUNNING THE CODE
-
-You will need to have Java installed in order to run this code, which you can
-get here: http://www.java.com/.
-
-Note that this code is not intended as a tool for daily usage or a replacement
-for the web site. It is only intended as a demonstration of how to use the code
-and as a backup of last resort. If the web site ever does disappear, the hope is
-that this code will be used to create a new tool or web site to replace it.
-Because of this the tool is extremely rudimentary.
-
-To run it, change the current directory to the directory containing
-PasswordCard.jar and execute the following command:
-
-java -jar PasswordCard.jar <card number> [ --digitArea ] [ -- includeSymbols ]
-
-Where <card number> is the hexadecimal card number printed on the card, and
---digitArea and --includeSymbols are optional parameters respectively to include
-an area containing only digits on the card and to include symbols on the card
-in addition to letters and digits.
-
-The contents of the card will be written to standard out. If you want to capture
-them in a file you can use the redirection operator by appending something like
-this to the command line given above:
-
-> passwordcard.txt
-
-
-CHARACTER ENCODING
-
-The source code files, including this README file, are encoded with UTF-8. Take
-this into account when opening them, or when trying to compile them! The javac
-command has an -encoding parameter with which you can indicate the encoding of
-the source file.
-
-Similarly, the demonstration code described above also uses the UTF-8 encoding
-for its output. If your terminal or console settings are not configured for
-UTF-8, the output may appear distorted. It is best to capture the output to a
-file, as described above.
-
-
-FONT
-
-To print a card correctly you would need a non-proportional font containing at
-least all the symbols used by PasswordCard. The font used by the web site is
-the FreeMono font from the GNU FreeFont project, which can be downloaded here:
-http://ftp.gnu.org/gnu/freefont/
-
-
-COLOURS
-
-The web site colours the lines of the password card as follows:
-
-header: white
-line 1: white
-line 2: grey
-line 3: red
-line 4: green
-line 5: yellow
-line 6: blue
-line 7: magenta
-line 8: cyan
-
-
-EXAMPLE
+h1. Samples
 
 As an example, here are the contents of card "0". You can use this to check
 whether your implementation of the algorithm is correct, or whether your Java
@@ -128,3 +46,11 @@ yC7F$VmZmm)eyqr7WYbkQGPmzKH8w
 17991217181439203253132044852
 98800632442892945030702203420
 62553387062569327054648988566
+
+h1. License
+
+Copyright © 2011 Juan José Aguililla. All rights reserved.
+
+This program comes WITHOUT ANY WARRANTY; It is free software, and you can redistribute
+it and/or modify it under the terms of the GNU General Public License, Version 3.0.
+You may obtain a copy of the License at: "www.gnu.org/licenses/gpl.html":http://www.gnu.org/licenses/gpl.html.
