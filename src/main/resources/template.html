@@ -5,16 +5,24 @@
 <meta charset="UTF-8">
 <title>Card</title>
 <style type="text/css">
+	* {
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-o-user-select: none;
+		user-select: none;
+	}
 	body {
 		margin: 0;
 		padding: 0;
 	}
- 	table {
- 		border-spacing: 0;
-/* 		border: 1px solid #808080; */
-/* 		border-radius: 1em; */
-/* 		padding: 0.5em; */
- 	}
+	table {
+		border-spacing: 0;
+		border: 1px solid #808080;
+		padding: 0.5em;
+	}
 	th, td {
 		font: 1em FreeMono, Arial, Helvetica, sans-serif;
 		text-align: center;
@@ -23,7 +31,7 @@
 		font-weight: bold;
 		color: #808080;
 	}
-	
+
 	tbody > tr:nth-child(1) td { background-color: #FFFFFF }
 	tbody > tr:nth-child(2) td { background-color: #C0C0C0 }
 	tbody > tr:nth-child(3) td { background-color: #FFC0C0 }
@@ -39,70 +47,11 @@
 <table>
 	<thead>
 		<tr>
-			<th></th>
-			<th>□</th><th>$</th><th>☹</th><th>☀</th><th>☂</th><th>?</th><th>◩</th><th>▲</th>
-			<th>○</th><th>◐</th><th>¿</th><th>△</th><th>£</th><th>■</th><th>¡</th><th>☁</th>
-			<th>☺</th><th>⊙</th><th>¥</th><th>♥</th><th>★</th><th>€</th><th>�</th><th>●</th>
-			<th>♦</th><th>!</th><th>♣</th><th>♫</th><th>♠</th>
+			<?header?>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<th>1</th>
-			<td>S</td><td>T</td><td>Q</td><td>2</td><td>e</td><td>B</td><td>e</td><td>w</td>
-			<td>h</td><td>5</td><td>f</td><td>E</td><td>z</td><td>2</td><td>Q</td><td>E</td>
-			<td>H</td><td>3</td><td>J</td><td>R</td><td>X</td><td>w</td><td>P</td><td>S</td>
-			<td>8</td><td>A</td><td>w</td><td>F</td><td>Y</td>
-		</tr>
-		<tr>
-			<th>2</th>
-			<td>B</td><td>s</td><td>r</td><td>S</td><td>x</td><td>p</td><td>s</td><td>m</td>
-			<td>4</td><td>L</td><td>C</td><td>5</td><td>m</td><td>H</td><td>G</td><td>S</td>
-			<td>R</td><td>j</td><td>z</td><td>w</td><td>r</td><td>z</td><td>z</td><td>S</td>
-			<td>a</td><td>X</td><td>n</td><td>z</td><td>k</td>
-		</tr>
-		<tr>
-			<th>3</th>
-			<td>n</td><td>C</td><td>W</td><td>F</td><td>T</td><td>V</td><td>5</td><td>Z</td>
-			<td>q</td><td>m</td><td>B</td><td>e</td><td>Q</td><td>q</td><td>R</td><td>7</td>
-			<td>t</td><td>Y</td><td>S</td><td>k</td><td>A</td><td>G</td><td>N</td><td>m</td>
-			<td>7</td><td>K</td><td>T</td><td>8</td><td>4</td>
-		</tr>
-		<tr>
-			<th>4</th>
-			<td>B</td><td>F</td><td>q</td><td>Q</td><td>d</td><td>d</td><td>g</td><td>h</td>
-			<td>E</td><td>L</td><td>Z</td><td>b</td><td>k</td><td>4</td><td>c</td><td>H</td>
-			<td>5</td><td>J</td><td>z</td><td>L</td><td>p</td><td>z</td><td>B</td><td>g</td>
-			<td>t</td><td>9</td><td>A</td><td>8</td><td>s</td>
-		</tr>
-		<tr>
-			<th>5</th>
-			<td>X</td><td>5</td><td>A</td><td>d</td><td>Q</td><td>q</td><td>d</td><td>Y</td>
-			<td>N</td><td>r</td><td>s</td><td>a</td><td>v</td><td>s</td><td>c</td><td>z</td>
-			<td>7</td><td>K</td><td>C</td><td>P</td><td>p</td><td>h</td><td>s</td><td>2</td>
-			<td>q</td><td>W</td><td>H</td><td>4</td><td>T</td>
-		</tr>
-		<tr>
-			<th>6</th>
-			<td>F</td><td>S</td><td>t</td><td>6</td><td>F</td><td>4</td><td>v</td><td>4</td>
-			<td>A</td><td>H</td><td>3</td><td>b</td><td>m</td><td>P</td><td>4</td><td>7</td>
-			<td>5</td><td>9</td><td>u</td><td>C</td><td>L</td><td>Y</td><td>B</td><td>h</td>
-			<td>g</td><td>Z</td><td>Y</td><td>2</td><td>9</td>
-		</tr>
-		<tr>
-			<th>7</th>
-			<td>y</td><td>H</td><td>Y</td><td>K</td><td>h</td><td>L</td><td>Y</td><td>k</td>
-			<td>y</td><td>J</td><td>k</td><td>f</td><td>g</td><td>M</td><td>U</td><td>U</td>
-			<td>h</td><td>z</td><td>m</td><td>V</td><td>4</td><td>E</td><td>e</td><td>M</td>
-			<td>u</td><td>T</td><td>t</td><td>S</td><td>2</td>
-		</tr>
-		<tr>
-			<th>8</th>
-			<td>d</td><td>M</td><td>V</td><td>V</td><td>f</td><td>a</td><td>Y</td><td>w</td>
-			<td>Q</td><td>3</td><td>w</td><td>c</td><td>d</td><td>Z</td><td>H</td><td>9</td>
-			<td>4</td><td>c</td><td>p</td><td>b</td><td>j</td><td>J</td><td>Y</td><td>g</td>
-			<td>Y</td><td>T</td><td>K</td><td>W</td><td>L</td>
-		</tr>
+		<?rows?>
 	</tbody>
 </table>
 </body>

@@ -29,7 +29,7 @@ public class App {
     private static final String TRAY_IMAGE = "/icon.png";
     private static final String DEFAULT_PROPERTIES = "/passwordcard.properties";
 
-    public static void main (String[] aArgs) {
+    public static void main(String[] aArgs) {
         try {
             String config = DEFAULT_PROPERTIES;
             boolean html = false;
@@ -56,22 +56,23 @@ public class App {
         }
         catch (Exception e) {
             err.println ("Unhandled exception. Closing application");
+            e.printStackTrace ();
             exit (-1);
         }
     }
 
+    Properties mConfig = new Properties ();
+    Card mCard;
+
     Display mDisplay;
-    Shell mCardWindow;
-    TrayItem mCardTray;
     Image mImage;
-    Properties mConfig;
+    TrayItem mCardTray;
+    Shell mCardWindow;
+    Browser mBrowser;
 
     private App (String aConfigProperties) throws IOException {
         super ();
-        mDisplay = new Display ();
-        mCardTray = createTray ();
-        mCardWindow = createWindow ();
-        mConfig = new Properties ();
+        String props = aConfigProperties;
         try {
             // TODO Check property existence properly
             mConfig.load (new FileReader (aConfigProperties));
@@ -79,7 +80,34 @@ public class App {
         catch (IOException e) {
             InputStream stream = App.class.getResourceAsStream (DEFAULT_PROPERTIES);
             mConfig.load (new InputStreamReader (stream));
+            props = DEFAULT_PROPERTIES;
         }
+
+        mCard = new Card (props);
+        mDisplay = new Display ();
+        mCardTray = createTray ();
+        mCardWindow = createWindow ();
+        mBrowser = createBrowser ();
+    }
+
+    void toggleWindow () {
+        if (mCardWindow.isVisible ()) {
+            Shell wnd = mCardWindow;
+            mCardWindow = createWindow ();
+            mBrowser.setParent (mCardWindow);
+            wnd.close ();
+        }
+        else {
+            mCardWindow.open ();
+        }
+    }
+
+    private Browser createBrowser () throws IOException {
+        Browser browser = new Browser (mCardWindow, NONE);
+        browser.setText (mCard.toHtml ());
+        browser.setJavascriptEnabled (false);
+        browser.setEnabled (false);
+        return browser;
     }
 
     private TrayItem createTray () {
@@ -98,7 +126,7 @@ public class App {
         item.addListener (Selection, new Listener () {
             @Override
             public void handleEvent (Event event) {
-                mCardWindow.setVisible (!mCardWindow.getVisible ());
+                toggleWindow ();
             }
         });
 
@@ -113,7 +141,7 @@ public class App {
     }
 
     private Shell createWindow () {
-        final Shell shell = new Shell (mDisplay, NO_TRIM);
+        final Shell shell = new Shell (mDisplay, NO_TRIM | ON_TOP);
         shell.setLayout (new FillLayout ());
         shell.setAlpha (196);
         shell.setImage (mImage);
@@ -121,11 +149,6 @@ public class App {
         shell.setSize (550, 250);
 //        Region r = new Region ();
 //        shell.setRegion (r);
-
-        Browser browser = new Browser (shell, NONE);
-        browser.setUrl ("file:///home/jam/Projects/oss/passwordcard/src/main/resources/template.html");
-        browser.setJavascriptEnabled (false);
-        browser.setEnabled (false);
 
         return shell;
     }

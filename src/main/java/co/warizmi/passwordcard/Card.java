@@ -7,9 +7,14 @@ import static java.lang.System.*;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.Random;
@@ -25,6 +30,8 @@ public class Card {
     public static final String DIGITS_LETTERS = "23456789" + LOWERCASE_LETTERS + UPPERCASE_LETTERS;
     public static final String DIGITS_LETTERS_SYMBOLS = DIGITS_LETTERS + "@#$%&*<>?€+{}[]()/\\";
 
+    public static final String HTML_TEMPLATE = "/template.html";
+    public static final Font FONT = new Font ("FreeMono", PLAIN, 10);
     public static final Color [] COLORS = {
         new Color (0xFFFFFF), // White
         new Color (0xC0C0C0), // Gray
@@ -35,8 +42,6 @@ public class Card {
         new Color (0xFFC0FF), // Magenta
         new Color (0xC0FFFF)  // Cyan
     };
-
-    public static final Font FONT = new Font ("FreeMono", PLAIN, 10);
 
     private static long parseUnsignedHex (String aHex) {
         if (aHex == null || (aHex = aHex.trim ()).length () < 1 || aHex.length () > 16)
@@ -128,26 +133,61 @@ public class Card {
         return mNumber;
     }
 
-    public String toHtml () {
+    public String readResource(InputStream aInput) throws IOException {
+        if (aInput == null)
+            throw new IllegalArgumentException ("Can't read a 'null' stream");
+
+        Writer writer = new StringWriter();
+        try {
+            char[] buffer = new char[1024];
+            Reader reader = new BufferedReader(new InputStreamReader(aInput));
+            int n;
+            while ((n = reader.read(buffer)) != -1)
+                writer.write(buffer, 0, n);
+        }
+        finally {
+            aInput.close();
+        }
+
+        return writer.toString();
+    }
+
+    public String toHtml () throws IOException {
         return toHtml (true);
     }
 
-    public String toHtml (boolean aShowLineNumber) {
+    public String toHtml (boolean aShowLineNumber) throws IOException {
         String eol = lineSeparator ();
-        int lineLength = WIDTH + eol.length ();
-        lineLength += (aShowLineNumber? 1 : 0);
-        StringBuilder buffer = new StringBuilder (HEIGHT * lineLength);
+        StringBuilder buffer = new StringBuilder ();
         char[] grid = getGrid ();
 
-        for (int ii = 0; ii < grid.length; ii += WIDTH) {
-            if (aShowLineNumber) {
-                buffer.append (ii > 0? Character.forDigit (ii, 10) : ' ');
+        // Header
+        if (aShowLineNumber)
+            buffer.append ("\t\t\t<th></th>").append (eol);
+        for (int ii = 0; ii < WIDTH; ii++)
+            buffer.append ("\t\t\t<th>").append (grid [ii]).append ("</th>").append (eol);
+
+        // Load template
+        String template = readResource (App.class.getResourceAsStream (HTML_TEMPLATE));
+        template = template.replace ("<?header?>", buffer);
+        buffer.delete (0, buffer.length ());
+
+        // Rows
+        for (int ii = WIDTH; ii < grid.length; ii++) {
+            if (ii % WIDTH == 0) {
+                buffer.append ("\t\t<tr>").append (eol);
+
+                if (aShowLineNumber && ii % WIDTH == 0)
+                    buffer.append ("\t\t\t<th>").append (ii / WIDTH).append ("</th>").append (eol);
             }
-            buffer.append (grid, ii, WIDTH);
-            buffer.append (eol);
+
+            buffer.append ("\t\t\t<td>").append (grid [ii]).append ("</td>").append (eol);
+
+            if ( (ii + 1) % WIDTH == 0)
+                buffer.append ("\t\t</tr>").append (eol);
         }
 
-        return buffer.toString ();
+        return template.replace ("<?rows?>", buffer);
     }
 
     @Override
