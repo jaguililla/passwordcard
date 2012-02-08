@@ -15,11 +15,12 @@ import java.io.PrintStream;
 import java.util.Properties;
 
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
@@ -63,6 +64,9 @@ public class App {
 
     Properties mConfig = new Properties ();
     Card mCard;
+    boolean mOntop;
+    int mTransparency;
+    boolean mRounded;
 
     Display mDisplay;
     Image mImage;
@@ -82,6 +86,9 @@ public class App {
             mConfig.load (new InputStreamReader (stream));
             props = DEFAULT_PROPERTIES;
         }
+        mOntop = Boolean.valueOf (mConfig.getProperty ("ontop"));
+        mTransparency = Integer.valueOf (mConfig.getProperty ("transparency"));
+        mRounded = Boolean.valueOf (mConfig.getProperty ("rounded"));
 
         mCard = new Card (props);
         mDisplay = new Display ();
@@ -98,6 +105,7 @@ public class App {
             wnd.close ();
         }
         else {
+            mCardWindow.setLocation (mDisplay.getCursorLocation ());
             mCardWindow.open ();
         }
     }
@@ -118,22 +126,20 @@ public class App {
 
         mImage = new Image (mDisplay, App.class.getResourceAsStream (TRAY_IMAGE));
 
-
         final TrayItem item = new TrayItem (tray, NONE);
-        item.setToolTipText ("Password Card Tray");
+        item.setToolTipText ("Password Card Tray\nPress CTRL + Click to exit");
         item.setImage (mImage);
 
-        item.addListener (Selection, new Listener () {
-            @Override
-            public void handleEvent (Event event) {
-                toggleWindow ();
+        item.addSelectionListener (new SelectionListener () {
+            @Override public void widgetDefaultSelected (SelectionEvent aEvent) {
+                widgetSelected (aEvent);
             }
-        });
 
-        item.addListener (DefaultSelection, new Listener () {
-            @Override
-            public void handleEvent (Event event) {
-                item.dispose ();
+            @Override public void widgetSelected (SelectionEvent aEvent) {
+                if (aEvent.stateMask == CTRL)
+                    item.dispose ();
+                else
+                    toggleWindow ();
             }
         });
 
@@ -141,14 +147,16 @@ public class App {
     }
 
     private Shell createWindow () {
-        final Shell shell = new Shell (mDisplay, NO_TRIM | ON_TOP);
+        final Shell shell = new Shell (mDisplay, mOntop? NO_TRIM | ON_TOP : NO_TRIM);
         shell.setLayout (new FillLayout ());
-        shell.setAlpha (196);
+        shell.setAlpha (mTransparency);
         shell.setImage (mImage);
         shell.setText ("Password Card");
         shell.setSize (550, 250);
-//        Region r = new Region ();
-//        shell.setRegion (r);
+        if (mRounded) {
+            Region r = new Region ();
+            shell.setRegion (r);
+        }
 
         return shell;
     }
