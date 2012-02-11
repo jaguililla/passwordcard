@@ -19,6 +19,10 @@ h1. Prerequisites
 
 To compile and run the project you will need JDK 6. Also to build the project you will need Maven 3, you can also use Maven 2 modifying the POM (that's up to you).
 
+h1. Building
+
+Install SWT in Maven repository using: mvn install:install-file
+
 h1. Samples
 
 As an example, here are the contents of card "0". You can use this to check

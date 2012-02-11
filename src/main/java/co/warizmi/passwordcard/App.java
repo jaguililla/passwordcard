@@ -18,6 +18,8 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.graphics.Region;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -29,6 +31,7 @@ import org.eclipse.swt.widgets.TrayItem;
 public class App {
     private static final String TRAY_IMAGE = "/icon.png";
     private static final String DEFAULT_PROPERTIES = "/passwordcard.properties";
+    private static final String JS_GET_TABLE = "return document.getElementsByTagName ('table')[0]";
 
     public static void main(String[] aArgs) {
         try {
@@ -64,9 +67,8 @@ public class App {
 
     Properties mConfig = new Properties ();
     Card mCard;
-    boolean mOntop;
-    int mTransparency;
-    boolean mRounded;
+    boolean mOntop, mRounded;
+    int mTransparency, mWidth, mHeight;
 
     Display mDisplay;
     Image mImage;
@@ -105,8 +107,20 @@ public class App {
             wnd.close ();
         }
         else {
-            mCardWindow.setLocation (mDisplay.getCursorLocation ());
             mCardWindow.open ();
+            if (mWidth == 0 || mHeight == 0) {
+                mWidth =
+                    ((Double)mBrowser.evaluate (JS_GET_TABLE + ".clientWidth")).intValue () + 2;
+                mHeight =
+                    ((Double)mBrowser.evaluate (JS_GET_TABLE + ".clientHeight")).intValue () + 2;
+                mCardWindow.setSize (mWidth, mHeight);
+            }
+            Rectangle bounds = mDisplay.getBounds ();
+            Point mouseLocation = mDisplay.getCursorLocation ();
+            int cursorX = mouseLocation.x, cursorY = mouseLocation.y;
+            int x = cursorX > bounds.width / 2? cursorX - mWidth - 10 : cursorX + 10;
+            int y = cursorY > bounds.height / 2? cursorY - mHeight : cursorY;
+            mCardWindow.setLocation (x, y);
         }
     }
 
@@ -152,7 +166,7 @@ public class App {
         shell.setAlpha (mTransparency);
         shell.setImage (mImage);
         shell.setText ("Password Card");
-        shell.setSize (550, 250);
+        shell.setSize (mWidth, mHeight);
         if (mRounded) {
             Region r = new Region ();
             shell.setRegion (r);
