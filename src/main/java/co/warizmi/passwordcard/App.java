@@ -15,6 +15,8 @@ import java.io.PrintStream;
 import java.util.Properties;
 
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -37,25 +39,25 @@ public class App {
         try {
             String config = DEFAULT_PROPERTIES;
             boolean html = false;
-            boolean tray = false;
+            boolean print = false;
 
             for (String arg : aArgs)
                 if (!arg.startsWith ("-"))
                     config = arg;
                 else if (arg.equals ("--html"))
                     html = true;
-                else if (arg.equals ("--tray"))
-                    tray = true;
+                else if (arg.equals ("--print"))
+                    print = true;
                 else
                     throw new IllegalArgumentException (arg);
 
-            if (tray) {
-                new App (config).run ();
-            }
-            else {
+            if (print) {
                 setOut (new PrintStream (new FileOutputStream (FileDescriptor.out), true, "UTF-8"));
                 Card card = new Card (config);
                 out.println (html? card.toHtml () : card.toString ());
+            }
+            else {
+                new App (config).run ();
             }
         }
         catch (Exception e) {
@@ -118,8 +120,10 @@ public class App {
             Rectangle bounds = mDisplay.getBounds ();
             Point mouseLocation = mDisplay.getCursorLocation ();
             int cursorX = mouseLocation.x, cursorY = mouseLocation.y;
-            int x = cursorX > bounds.width / 2? cursorX - mWidth - 10 : cursorX + 10;
-            int y = cursorY > bounds.height / 2? cursorY - mHeight : cursorY;
+            int x = cursorX > bounds.width / 2?
+                cursorX - mWidth - 10 : cursorX + 10;
+            int y = cursorY > bounds.height / 2?
+                cursorY - (mHeight / 2) : cursorY;
             mCardWindow.setLocation (x, y);
         }
     }
@@ -129,6 +133,11 @@ public class App {
         browser.setText (mCard.toHtml ());
         browser.setJavascriptEnabled (false);
         browser.setEnabled (false);
+        browser.addMouseListener (new MouseAdapter () {
+            @Override public void mouseUp (MouseEvent aArg0) {
+                toggleWindow ();
+            }
+        });
         return browser;
     }
 

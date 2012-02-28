@@ -84,6 +84,10 @@
 				<version>2.3.2</version>
 				<configuration>
 					<archive>
+						<manifestEntries>
+							<Class-Path>.</Class-Path>
+							<App-Version>${project.version}</App-Version>
+						</manifestEntries>
 						<manifest>
 							<mainClass>co.warizmi.passwordcard.App</mainClass>
 						</manifest>
@@ -98,6 +102,22 @@
 						<phase>package</phase>
 						<goals>
 							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/bundle.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
 						</goals>
 					</execution>
 				</executions>
