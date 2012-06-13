@@ -11,13 +11,17 @@
 <!-- 			<filtered>true</filtered> -->
 <!-- 		</file> -->
 		<file>
+			<source>src/main/resources/passwordcard.properties</source>
+			<filtered>true</filtered>
+		</file>
+		<file>
 			<source>${project.build.directory}/${project.build.finalName}.jar</source>
 		</file>
 		<file>
 			<source>${project.build.outputDirectory}/passwordcard.properties</source>
 		</file>
-		<file>
-			<source>${project.build.outputDirectory}/template.html</source>
-		</file>
+<!-- 		<file> -->
+<!-- 			<source>${project.build.outputDirectory}/template.html</source> -->
+<!-- 		</file> -->
 	</files>
 </assembly>

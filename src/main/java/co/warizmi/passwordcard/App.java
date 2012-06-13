@@ -5,6 +5,7 @@ package co.warizmi.passwordcard;
 import static java.lang.System.*;
 import static org.eclipse.swt.SWT.*;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -82,8 +83,14 @@ public class App {
         super ();
         String props = aConfigProperties;
         try {
-            // TODO Check property existence properly
-            mConfig.load (new FileReader (aConfigProperties));
+            File f = new File (aConfigProperties);
+            if (!f.exists () || f.isDirectory ()) {
+                f = new File ("passwordcard.properties");
+                props = !f.exists () || f.isDirectory ()?
+                    System.getProperty ("user.home") + "/.passwordcard" :
+                    "passwordcard.properties";
+            }
+            mConfig.load (new FileReader (props));
         }
         catch (IOException e) {
             InputStream stream = App.class.getResourceAsStream (DEFAULT_PROPERTIES);
