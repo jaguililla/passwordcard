@@ -35,6 +35,7 @@ public class App {
     private static final String TRAY_IMAGE = "/icon.png";
     private static final String DEFAULT_PROPERTIES = "/passwordcard.properties";
     private static final String JS_GET_TABLE = "return document.getElementsByTagName ('table')[0]";
+    private static final int POPUP_MARGIN = 10;
 
     public static void main(String[] aArgs) {
         try {
@@ -116,22 +117,51 @@ public class App {
             wnd.close ();
         }
         else {
-            mCardWindow.open ();
             if (mWidth == 0 || mHeight == 0) {
+                mCardWindow.open (); // We need to open to know the size
                 mWidth =
                     ((Double)mBrowser.evaluate (JS_GET_TABLE + ".clientWidth")).intValue () + 2;
                 mHeight =
                     ((Double)mBrowser.evaluate (JS_GET_TABLE + ".clientHeight")).intValue () + 2;
                 mCardWindow.setSize (mWidth, mHeight);
             }
-            Rectangle bounds = mDisplay.getBounds ();
+            Rectangle screenSize = mDisplay.getBounds ();
             Point mouseLocation = mDisplay.getCursorLocation ();
+
+            // Calculate the topleft coordinates depending of the quadrant
             int cursorX = mouseLocation.x, cursorY = mouseLocation.y;
-            int x = cursorX > bounds.width / 2?
-                cursorX - mWidth - 10 : cursorX + 10;
-            int y = cursorY > bounds.height / 2?
-                cursorY - (mHeight / 2) : cursorY;
+            int screenWidth = screenSize.width, screenHeight = screenSize.height;
+            boolean right = cursorX > screenWidth / 2, bottom = cursorY > screenHeight / 2;
+            int dX = right? screenWidth - cursorX : cursorX;
+            int dY = bottom? screenHeight - cursorY : cursorY;
+            int x = 0, y = 0;
+//            System.out.println (
+//                "Screen (" + screenWidth + ", " + screenHeight +
+//                ") Size (" + mWidth + ", " + mHeight +
+//                ") Click (" + cursorX + ", " + cursorY +
+//                ") D (" + dX + ", " + dY + ")");
+
+            // If taskbar horizontal (center x, margin y)
+            // TODO This way of finding out is not accurate at all! allow to set this in properties
+            if (dY < dX) {
+                y = bottom? cursorY - mHeight - POPUP_MARGIN : cursorY + POPUP_MARGIN;
+                x = cursorX - (mWidth / 2);
+                if (!right && x < POPUP_MARGIN)
+                    x = POPUP_MARGIN;
+                else if (right && x + mWidth > screenWidth - POPUP_MARGIN)
+                    x = screenWidth - POPUP_MARGIN - mWidth;
+            }
+            else { // If taskbar vertical (center y, margin x)
+                x = right? cursorX - mWidth - POPUP_MARGIN : cursorX + POPUP_MARGIN;
+                y = cursorY - (mHeight / 2);
+                if (!bottom && y < POPUP_MARGIN)
+                    y = POPUP_MARGIN;
+                else if (bottom && y + mHeight > screenHeight - POPUP_MARGIN)
+                    y = screenHeight - POPUP_MARGIN - mHeight;
+            }
+
             mCardWindow.setLocation (x, y);
+            mCardWindow.open ();
         }
     }
 
