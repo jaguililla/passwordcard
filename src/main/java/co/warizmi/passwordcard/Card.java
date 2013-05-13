@@ -3,10 +3,10 @@ package co.warizmi.passwordcard;
 import static java.awt.Font.PLAIN;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Long.parseLong;
-import static java.lang.System.*;
+import static java.lang.System.arraycopy;
+import static java.lang.System.lineSeparator;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -106,8 +106,8 @@ public class Card {
     /**
      * Private implementation of Collections.shuffle() algorithm, because the Android core classes
      * implement it differently.
-     * @param list The list of characters to shuffle.
-     * @param rnd The pseudorandom generator instance to use for the shuffle.
+     * @param aList The list of characters to shuffle.
+     * @param aRnd The pseudorandom generator instance to use for the shuffle.
      */
     private char[] shuffle (char[] aList, Random aRnd) {
         for (int ii = aList.length; ii > 1; ii--)
@@ -190,8 +190,7 @@ public class Card {
         return template.replace ("<?rows?>", buffer);
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return toString (false, false);
     }
 

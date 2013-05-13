@@ -2,8 +2,14 @@
 package co.warizmi.passwordcard;
 
 // I M P O R T /////////////////////////////////////////////////////////////////////////////////////
-import static java.lang.System.*;
-import static org.eclipse.swt.SWT.*;
+import static java.lang.System.err;
+import static java.lang.System.exit;
+import static java.lang.System.out;
+import static java.lang.System.setOut;
+import static org.eclipse.swt.SWT.CTRL;
+import static org.eclipse.swt.SWT.NONE;
+import static org.eclipse.swt.SWT.NO_TRIM;
+import static org.eclipse.swt.SWT.ON_TOP;
 
 import java.io.File;
 import java.io.FileDescriptor;

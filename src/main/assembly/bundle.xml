@@ -7,7 +7,7 @@
 
 	<files>
 <!-- 		<file> -->
-<!-- 			<source>/src/main/config/readme.txt</source> -->
+<!-- 			<source>/src/main/assembly/readme.txt</source> -->
 <!-- 			<filtered>true</filtered> -->
 <!-- 		</file> -->
 		<file>
