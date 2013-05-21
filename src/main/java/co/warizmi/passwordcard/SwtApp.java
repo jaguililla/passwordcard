@@ -37,7 +37,7 @@ import org.eclipse.swt.widgets.Tray;
 import org.eclipse.swt.widgets.TrayItem;
 
 // C L A S S ///////////////////////////////////////////////////////////////////////////////////////
-public class App {
+public class SwtApp {
     private static final String TRAY_IMAGE = "/icon.png";
     private static final String DEFAULT_PROPERTIES = "/passwordcard.properties";
     private static final String JS_GET_TABLE = "return document.getElementsByTagName ('table')[0]";
@@ -65,7 +65,7 @@ public class App {
                 out.println (html? card.toHtml () : card.toString ());
             }
             else {
-                new App (config).run ();
+                new SwtApp (config).run ();
             }
         }
         catch (Exception e) {
@@ -86,7 +86,7 @@ public class App {
     Shell mCardWindow;
     Browser mBrowser;
 
-    private App (String aConfigProperties) throws IOException {
+    private SwtApp (String aConfigProperties) throws IOException {
         super ();
         String props = aConfigProperties;
         try {
@@ -100,7 +100,7 @@ public class App {
             mConfig.load (new FileReader (props));
         }
         catch (IOException e) {
-            InputStream stream = App.class.getResourceAsStream (DEFAULT_PROPERTIES);
+            InputStream stream = SwtApp.class.getResourceAsStream (DEFAULT_PROPERTIES);
             mConfig.load (new InputStreamReader (stream));
             props = DEFAULT_PROPERTIES;
         }
@@ -190,7 +190,7 @@ public class App {
         if (tray == null)
             throw new IllegalStateException ("The system tray is not available");
 
-        mImage = new Image (mDisplay, App.class.getResourceAsStream (TRAY_IMAGE));
+        mImage = new Image (mDisplay, SwtApp.class.getResourceAsStream (TRAY_IMAGE));
 
         final TrayItem item = new TrayItem (tray, NONE);
         item.setToolTipText ("Password Card Tray\nPress CTRL + Click to exit");

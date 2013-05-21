@@ -20,7 +20,7 @@ import java.util.Properties;
 import java.util.Random;
 
 public class Card {
-    private static final int WIDTH = 29, HEIGHT = 9;
+    public static final int WIDTH = 29, HEIGHT = 9;
     private static final int BODY_HEIGHT = HEIGHT - 1, HALF_HEIGHT = 1 + (BODY_HEIGHT / 2);
 
     private static final String LOWERCASE_LETTERS = "abcdefghjkmnpqrstuvwxyz";
@@ -31,7 +31,7 @@ public class Card {
     public static final String DIGITS_LETTERS_SYMBOLS = DIGITS_LETTERS + "@#$%&*<>?€+{}[]()/\\";
 
     public static final String HTML_TEMPLATE = "/template.html";
-    public static final Font FONT = new Font ("FreeMono", PLAIN, 10);
+    public static final Font FONT = new Font ("FreeMono", PLAIN, 18);
     public static final Color [] COLORS = {
         new Color (0xFFFFFF), // White
         new Color (0xC0C0C0), // Gray
@@ -168,7 +168,7 @@ public class Card {
             buffer.append ("\t\t\t<th>").append (grid [ii]).append ("</th>").append (eol);
 
         // Load template
-        String template = readResource (App.class.getResourceAsStream (HTML_TEMPLATE));
+        String template = readResource (Card.class.getResourceAsStream (HTML_TEMPLATE));
         template = template.replace ("<?header?>", buffer);
         buffer.delete (0, buffer.length ());
 

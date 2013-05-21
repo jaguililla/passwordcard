@@ -89,7 +89,7 @@
 							<App-Version>${project.version}</App-Version>
 						</manifestEntries>
 						<manifest>
-							<mainClass>co.warizmi.passwordcard.App</mainClass>
+							<mainClass>co.warizmi.passwordcard.SwingApp</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
